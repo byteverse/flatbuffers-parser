@@ -1,0 +1,133 @@
+# Root table at 0x10
+10 00 00 00
+
+# VTable for the root object
+0c 00 # VTable len: 0x0c
+14 00 # Table len: 0x14
+06 00 # Field "version" at position 0x06
+08 00 # Field "schema" at position 0x08
+0c 00 # Field "dictionaries" at position 0x0c
+10 00 # Field "recordBatches" at position 0x10
+
+# Position 0x0010 (big-endian notation)
+
+# Root table (type Footer)
+0c 00 00 00 # VTable offset: 0x0c (backwards)
+00 00       # Padding
+04 00       # Field "version" is 4 (a 16-bit number)
+38 00 00 00 # Field "schema" is at offset 0x38 (from here) (absolute 0x50)
+28 00 00 00 # Field "dictionaries" is at offset 0x28 (from here) (absolute 0x44)
+04 00 00 00 # Field "recordBatches" is at offset 0x04 (from here)
+
+# Position 0x0024
+
+# Record Batches Array (array of Block)
+01 00 00 00 # Length 1
+
+00 01 00 00 00 00 00 00 # recordBatches.0.offset
+00 01 00 00             # recordBatches.0.metaDataLength
+00 00 00 00             # padding
+80 00 00 00 00 00 00 00 # recordBatches.0.bodyLength
+
+00 00 00 00
+
+# Position 0x0044 (big-endian notation)
+
+# Array of zero dictionaries
+00 00 00 00
+
+# Position 0x0048 (big-endian notation)
+
+# VTable for schema table
+08 00 # VTable len: 0x08
+08 00 # Table len: 0x08
+00 00 # Field "endianness" is defaulted to "Little"
+04 00 # Field "fields" at position 0x04
+
+# Position 0x0050 (big-endian notation)
+
+# Table of type Schema
+08 00 00 00 # VTable offset: 0x08
+
+04 00 00 00 # Schema.fields is at array of offset 0x04
+
+# Position 0x0058 (big-endian notation)
+
+# fields array
+03 00 00 00 # Array length: 3
+88 00 00 00 # Element 0 at offset 0x88 (position 0x00e2)
+40 00 00 00 # Element 1 at offset 0x40
+04 00 00 00 # Element 2 at offset 0x04 (position 0x0064)
+
+# Position 0x0068 (big-endian notation)
+
+# fields.2
+94 ff ff ff # VTable is 0x6C bytes ahead
+00 00 00    # Padding
+02          # Field type.tag is 2
+10 00 00 00 # String field "name" is 0x10 bytes from here
+24 00 00 00 # Field type.table is 0x24 bytes from here
+04 00 00 00 # Field "children" is 0x04 bytes from here
+# end fields.2
+
+00 00 00 00 # children array has 0 elements
+
+# Position 0x0080 (big-endian notation)
+
+# Name for fields.2
+10 00 00 00              # Length is 0x10 (decimal 16)
+# String payload "destination_port"
+64 65 73 74 69 6e 61 74 69 6f 6e 5f 70 6f 72 74
+00                       # Trailing NUL for string
+00 00 00
+
+# Position 0x0098 (big-endian notation)
+
+# Table of type Int
+8e ff ff ff # VTable at offset 0x72 from here (at 0x010a)
+10 00 00 00
+
+cc ff ff ff 00 00 00 02  
+10 00 00 00 20 00 00 00 04 00 00 00 00 00 00 00  
+0e 00 00 00 64 65 73 74 69 6e 61 74 69 6f 6e 5f  # ....destination_
+69 70 00 00 c2 ff ff ff 20 00 00 00            # ip...... .......
+
+# Position 0x00d4
+# VTable for Field
+10 00 # VTable length: 0x10
+14 00 # Table length: 0x14
+08 00 # Field "name" at offset 0x08
+00 00 # Field "nullable" is absent
+07 00 # Field "type.tag" at offset 0x07
+0c 00 # Field "type.table" at offset 0x0c
+00 00 # Field "dictionary" is absent
+10 00 # Field "children" at offset 0x10
+
+# Position 0x00e4
+
+10 00
+00 00
+00 00
+
+00 02 10 00 00 00 20 00
+
+# Position 0x00f2
+
+00 00 04 00 00 00 00 00
+00 00
+
+09 00 00 00
+
+# Position 0x0100
+
+73 6f 75 72 63 65 5f 69 70 00 # source_ip
+
+# Position 0x010a
+# VTable for table of type Int
+06 00
+08 00
+04 00
+
+# Position 0x0112
+
+06 00 00 00 20 00 00 00  # p........... ...

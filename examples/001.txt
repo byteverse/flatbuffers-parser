@@ -1,0 +1,23 @@
+# This is the Eclectic.FooBar example from flatcc
+08 00 00 00             # Root table at offset 0x08
+4e 4f 4f 42             # NOOB (magic identifier)
+
+# Root table
+e8 ff ff ff             # VT Offset: -0x18 (-24 in decimal)
+08 00 00 00             # Say: Offset 8  
+2a                      # Meal: 42
+00                      # padding for alignment
+c0 e0                   # Height: -8000
+
+# String (for "say")
+05 00 00 00             # String length: 5 (for "hello")
+68 65 6c 6c 6f 00       # hello (with trailing NUL byte)
+00 00                   # padding for alignment
+
+# VTable
+0c 00                   # VTable length (12 bytes)
+0c 00                   # Table length (12 bytes)
+08 00                   # Field "meal" at position 8
+00 00                   # Field density missing
+04 00                   # Field say at position 4
+0a 00                   # Field height at position 10
