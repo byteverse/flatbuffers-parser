@@ -104,6 +104,7 @@ data Error
   | ArrayOfStructOffsetOutOfBounds
   | ArrayOfStructPayloadOutOfBounds !Int !Int !Int
   | ArrayOffsetAlignmentError
+  | ArrayOfStructOffsetAlignmentError
   | FieldArrayAlignmentError
   | ExpectedWord8EqButGot !Word8 !Word8
   | ExpectedWord16EqButGot !Word16 !Word16
@@ -386,11 +387,14 @@ structsInternal !alignment !sz = TableParser $ \content tableOffset end vtable f
   when (rem effectiveOffset 4 /= 0) (Left FieldArrayAlignmentError)
   let !(arrayOffset :: Word32) = LE.indexByteArray content (quot effectiveOffset 4)
   let !effectiveArrayOffset = (fromIntegral @Word32 @Int arrayOffset) + effectiveOffset
-  when (rem effectiveArrayOffset 4 /= 0) (Left ArrayOffsetAlignmentError)
-  when (rem (effectiveArrayOffset + 4) alignment /= 0) (Left ArrayOffsetAlignmentError)
+  when (rem effectiveArrayOffset 4 /= 0) (Left ArrayOfStructOffsetAlignmentError)
   when (effectiveArrayOffset + 4 > end) (Left ArrayOfStructOffsetOutOfBounds)
   let !(arrayLength :: Word32) = LE.indexByteArray content (quot effectiveArrayOffset 4)
   let arrayLengthI = fromIntegral @Word32 @Int arrayLength
+  -- We do not check the alignment of the start element when the length
+  -- is zero because there is no start element.
+  when (arrayLengthI > 0) $ do
+    when (rem (effectiveArrayOffset + 4) alignment /= 0) (Left ArrayOfStructOffsetAlignmentError)
   let !payloadSz = arrayLengthI * sz
   when (effectiveArrayOffset + 4 + payloadSz > end) (Left (ArrayOfStructPayloadOutOfBounds effectiveArrayOffset payloadSz end))
   let !(ByteArray arr) = runST $ do
