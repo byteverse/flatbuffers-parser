@@ -10,6 +10,7 @@ module Flatbuffers.Parser
   , UnionParser
   , Error(..)
   , run
+  , tableParserThrow
     -- * Table Fields
   , boolean
   , int8
@@ -29,6 +30,7 @@ module Flatbuffers.Parser
     -- * Unions
   , constructUnion2
   , constructUnion3
+  , constructUnionFromList
   ) where
 
 import Prelude hiding (length)
@@ -57,6 +59,7 @@ import qualified Data.Primitive.Contiguous as Contiguous
 import qualified Data.Bytes.Types
 import qualified Data.Bytes.Text.Utf8 as Utf8
 import qualified Data.Primitive.ByteArray.LittleEndian as LE
+import qualified GHC.Exts as Exts
 
 -- We do not include the vtable length in the slice since that number
 -- is already captured by the Sliced data constructor itself. We begin
@@ -109,6 +112,7 @@ data Error
   | ExpectedWord8EqButGot !Word8 !Word8
   | ExpectedWord16EqButGot !Word16 !Word16
   | MissingFieldWithIndex !Int
+  | UnsupportedUnionTag
   deriving (Show)
 
 type Parser :: Type -> Type
@@ -165,6 +169,9 @@ constructUnion2 a b = UnionParser (Contiguous.construct2 a b)
 
 constructUnion3 :: TableParser a -> TableParser a -> TableParser a -> UnionParser a
 constructUnion3 a b c = UnionParser (Contiguous.construct3 a b c)
+
+constructUnionFromList :: [TableParser a] -> UnionParser a
+constructUnionFromList xs = UnionParser (Exts.fromList xs)
 
 -- | Reads the first four bytes to determine the root table.
 run :: TableParser a -> ByteArray -> Either Error a
