@@ -112,7 +112,7 @@ data Error
   | ExpectedWord8EqButGot !Word8 !Word8
   | ExpectedWord16EqButGot !Word16 !Word16
   | MissingFieldWithIndex !Int
-  | UnsupportedUnionTag
+  | UnsupportedUnionTag !Word8
   deriving (Show)
 
 type Parser :: Type -> Type
